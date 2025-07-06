@@ -1,0 +1,142 @@
+{
+  "info": {
+    "_postman_id": "replace-with-your-own-id",
+    "name": "Notification Service - Documentation Collection",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "This collection documents Notification Service APIs. Variables like {{userPhoneNumber}} should include country code (+91) and mobile number."
+  },
+  "item": [
+    {
+      "name": "Get Deliveries by User",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8081/api/admin/deliveries?userId={{userPhoneNumber}}&status={{status}}",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8081",
+          "path": [
+            "api",
+            "admin",
+            "deliveries"
+          ],
+          "query": [
+            {
+              "key": "userId",
+              "value": "{{userPhoneNumber}}",
+              "description": "User phone number with +91 prefix"
+            },
+            {
+              "key": "status",
+              "value": "{{status}}",
+              "description": "Delivery status filter (e.g. SENT, DELIVERED)"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Produce Kafka Notification Event",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"eventId\": \"{{eventId}}\",\n  \"userId\": \"{{userPhoneNumber}}\",\n  \"eventType\": \"APPOINTMENT_REMINDER\",\n  \"payload\": {\n    \"patientName\": \"{{patientName}}\",\n    \"appointmentTime\": \"{{appointmentTime}}\"\n  },\n  \"createdAt\": \"{{createdAt}}\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8081/test-produce",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8081",
+          "path": [
+            "test-produce"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create User Preference",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"userId\": \"{{userPhoneNumber}}\",\n  \"smsEnabled\": {{smsEnabled}},\n  \"updatedAt\": \"{{updatedAt}}\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8081/user-preferences/create",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8081",
+          "path": [
+            "user-preferences",
+            "create"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "userPhoneNumber",
+      "value": "+91XXXXXXXXXX",
+      "description": "Phone number of the user, with +91 country code"
+    },
+    {
+      "key": "status",
+      "value": "SENT",
+      "description": "Delivery status (e.g. SENT, DELIVERED)"
+    },
+    {
+      "key": "eventId",
+      "value": "evt-001",
+      "description": "Unique event ID"
+    },
+    {
+      "key": "patientName",
+      "value": "John Doe",
+      "description": "Name of the patient for appointment reminder"
+    },
+    {
+      "key": "appointmentTime",
+      "value": "2025-07-08 10:30AM",
+      "description": "Scheduled time of the appointment"
+    },
+    {
+      "key": "createdAt",
+      "value": "2025-07-06T12:00:00Z",
+      "description": "Event creation timestamp in ISO format"
+    },
+    {
+      "key": "smsEnabled",
+      "value": "true",
+      "description": "Boolean indicating if SMS notifications are enabled"
+    },
+    {
+      "key": "updatedAt",
+      "value": "2025-07-06T12:00:00",
+      "description": "Last updated timestamp for user preferences"
+    }
+  ]
+}
